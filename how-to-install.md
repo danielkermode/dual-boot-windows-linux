@@ -30,10 +30,12 @@
 
 11. To get internet on the new system, `pacman -S dialog wpa_supplicant iw` and run `wifi-menu`. Note that if internet is already running, you won't need to connect until reboot.
 
-12. Configure boot loader. I use `systemd-boot`. In case you're installing a new linux with an existing ESP, get name of ESP (eg. /dev/sda2) and `mount /dev/sda2 /mnt`.
+12. Configure boot loader. I use `systemd-boot`. In case you're installing a new linux with an existing ESP, get name of ESP (eg. `/dev/sda2`) and `mount /dev/sda2 /mnt`.
 
-Note: /boot should contain "initramfs-linux-fallback.img  initramfs-linux.img  vmlinuz-linux" (and probably lts versions).
-If this is the first linux, "bootctl install" will copy required .efi files to the esp, provided it is mounted at `/boot` (not `/mnt`!). Note that I use `systemd-boot` with config options (linux, initrd and PARTUUID) for linux startup, but the .efi is used for systemd-boot itself by the ESP.
+Note: `/boot` should contain "initramfs-linux-fallback.img  initramfs-linux.img  vmlinuz-linux" (and probably "lts" versions).
+If this is the first linux on a machine, `bootctl install` will copy required .efi files to the esp, provided it is mounted at `/boot` (not `/mnt`!).
+
+Note that I use `systemd-boot` with config options (linux, initrd and PARTUUID) for linux startup, but the .efi is used for systemd-boot itself by the ESP.
 
 Obtain PARTUUID for root partition with `blkid -s PARTUUID -o value /dev/sda9` and write a *.conf file in `/entries` of the ESP:
 
@@ -45,6 +47,6 @@ initrd /initramfs-linux.img
 options root=PARTUUID=acae0845-1747-9644-a2b2-e74dbaf9135f rw
 ```
 
-Basically how this works: the linux kernel and .img files are generated automatically or you can generate manually with `mkinitcpio -p linux`. If the `/etc/fsta`b file of the installation describes mounting the ESP at `/boot`, these files will be placed in the ESP alongside other stuff such as loader conf when the root partition is booted. If there is no mounting of the ESP on startup, then the files simply reside in `/boot` by themselves but need to be in the ESP as well, described in the config of the boot loader.
+Basically how this works: the linux kernel and .img files are generated automatically or you can generate manually with `mkinitcpio -p linux`. If the `/etc/fstab` file of the installation describes mounting the ESP at `/boot`, these files will be placed in the ESP alongside other stuff such as loader conf when the root partition is booted. If there is no mounting of the ESP on startup, then the files simply reside in `/boot` by themselves but need to be in the ESP as well, described in the config of the boot loader.
 
 https://wiki.archlinux.org/index.php/Systemd-boot#Configuration has more info about boot stuff.
