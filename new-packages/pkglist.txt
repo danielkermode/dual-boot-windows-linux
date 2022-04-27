@@ -1,0 +1,7 @@
+amd-ucode
+base
+dhcpcd
+iwd
+linux
+linux-firmware
+nano
